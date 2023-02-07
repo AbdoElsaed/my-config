@@ -1,17 +1,20 @@
 #!/bin/bash
 
-### example usage -> ./remove_all_except_folders /path/to/location folder1 folder2 folder3
+# Example -> ./remove_all_except_folders /path/to/location dir1 dir2 file1 file2
+
+# this will delete all files and folders except the ones specified in the command arguments
 
 LOCATION=$1
-EXCLUDED_FOLDERS=("$@")
-EXCLUDED_FOLDERS=("${EXCLUDED_FOLDERS[@]:1}")
+EXCLUDED_ITEMS=("$@")
+EXCLUDED_ITEMS=("${EXCLUDED_ITEMS[@]:1}")
 
-for d in $LOCATION/*/ ; do
-  dir=${d%*/}
-  dir=${dir##*/}
-  if ! [[ "${EXCLUDED_FOLDERS[@]}" =~ "$dir" ]]; then
-    rm -rf "$d"
+for item in $LOCATION/* ; do
+  item_name=$(basename $item)
+  if ! [[ "${EXCLUDED_ITEMS[@]}" =~ "$item_name" ]]; then
+    if [ -d $item ]; then
+      rm -rf $item
+    elif [ -f $item ]; then
+      rm $item
+    fi
   fi
 done
- 
-
